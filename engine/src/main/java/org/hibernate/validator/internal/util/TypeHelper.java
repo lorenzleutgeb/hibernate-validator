@@ -633,14 +633,12 @@ public final class TypeHelper {
 		return parameterizedType( getErasedReferenceType( type ), actualTypeArguments );
 	}
 
-	private static <K, V> Map<K, V> normalize(Map<K, V> map) {
-		// TODO: will this cause an infinite loop with recursive bounds?
+	private static <T> Map<T, T> normalize(Map<T, T> map) {
+		for ( Entry<T, T> entry : map.entrySet() ) {
+			T key = entry.getKey();
+			T value = entry.getValue();
 
-		for ( Entry<K, V> entry : map.entrySet() ) {
-			K key = entry.getKey();
-			V value = entry.getValue();
-
-			while ( map.containsKey( value ) ) {
+			while ( map.containsKey( value ) && key != value) {
 				value = map.get( value );
 			}
 
